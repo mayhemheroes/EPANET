@@ -1,0 +1,8 @@
+project: rnshah9/epanet
+target: epanet
+tests:
+  - file://tests/data/example_0.inp
+
+cmds:
+  - cmd: /repo/build/bin/runepanet @@ out
+    filepath: test.inp
