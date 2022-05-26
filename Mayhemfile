@@ -1,5 +1,5 @@
 project: rnshah9/epanet
-target: epanet
+target: runepanet
 tests:
   - file://tests/data/example_0.inp
 
