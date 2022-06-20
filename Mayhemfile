@@ -1,8 +1,8 @@
-project: rnshah9/epanet
+project: epanet
 target: runepanet
-tests:
+testsuite:
   - file://tests/data/example_0.inp
 
 cmds:
-  - cmd: /repo/build/bin/runepanet @@ out
+  - cmd: /repo/build/bin/runepanet test.inp out
     filepath: test.inp
