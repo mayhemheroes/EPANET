@@ -5,10 +5,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential cmake
 
 COPY . /repo
 WORKDIR /repo/build
-RUN cmake .. --prefix=/install
+RUN cmake ..
 RUN make -j8
-RUN make install
 
 FROM ubuntu:20.04 as package
-COPY --from=builder /install /install
-COPY --from=builder /repo/build/bin/runepanet /
+COPY --from=builder /repo/build /build
+ENV LD_LIBRARY_PATH=/build/lib

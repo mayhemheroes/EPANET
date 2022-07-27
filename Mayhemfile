@@ -4,4 +4,4 @@ testsuite:
   - file://tests/data/example_0.inp
 
 cmds:
-  - cmd: /runepanet @@ out
+  - cmd: /build/bin/runepanet @@ out
