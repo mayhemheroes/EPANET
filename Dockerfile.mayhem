@@ -3,16 +3,12 @@ FROM --platform=linux/amd64 ubuntu:20.04 as builder
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential cmake
 
-ADD . /repo
+COPY . /repo
 WORKDIR /repo/build
-RUN cmake ..
+RUN cmake .. --prefix=/install
 RUN make -j8
-
-RUN mkdir -p /deps
-RUN ldd /repo/build/bin/runepanet | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'cp % /deps;'
+RUN make install
 
 FROM ubuntu:20.04 as package
-
-COPY --from=builder /deps /deps
-COPY --from=builder /repo/build/bin/runepanet /repo/build/bin/runepanet
-ENV LD_LIBRARY_PATH=/deps
+COPY --from=builder /install /install
+COPY --from=builder /repo/build/bin/runepanet /
