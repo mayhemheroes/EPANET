@@ -11,5 +11,5 @@ RUN clang++ /repo/mayhem/fuzz_cstr_isvalid.cpp -fsanitize=fuzzer,address -I /rep
 
 FROM ubuntu:20.04 as package
 COPY --from=builder /repo/build /build
-COPY --from=builder /fuzz /fuzz_cstr_isvalid.cpp
+COPY --from=builder /fuzz /fuzz_cstr_isvalid
 ENV LD_LIBRARY_PATH=/build/lib
