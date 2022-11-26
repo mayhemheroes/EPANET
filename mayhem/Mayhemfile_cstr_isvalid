@@ -1,0 +1,6 @@
+project: epanet
+target: cstr-isvalid
+
+cmds:
+  - cmd: /fuzz_cstr_isvalid
+    libfuzzer: true
