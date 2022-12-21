@@ -1,0 +1,7 @@
+project: epanet
+target: runepanet
+testsuite:
+  - file://tests/data/example_0.inp
+
+cmds:
+  - cmd: /build/bin/runepanet @@ out
