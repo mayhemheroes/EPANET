@@ -248,13 +248,13 @@ __Format:__
 
 A line for each pipe subject to leaking that contains:
 - Pipe ID label
-- the area of cracks that leak in sq. mm per 100 units of pipe length (ft or m)
-- the rate at which cracks expand in sq. mm per unit of pressure head (ft or m)
+- the average combined area of leakage-generating cracks per 100 units of pipe length (in ft or m). This area is expressed in units of square mm regardless of the choice of model flow units.
+- the expansion in the average combined area of leakage-generating cracks as a function of the pressure head (in ft or m). This is the derivative of the area with respect to the pressure head, and is expressed in units of sq. mm per unit of modeled pressure head (in ft or m)
 
 __Remarks__
 1. This section is optional.
-2. Leak area is the total area of all cracks assumed to exist per 100 feet (or meters) of pipe.
-3. Experimental values of expansion range between 0 and 0.001 (sq mm)/m depending on pipe material and crack size.
+2. Average combined leak area is the total area of all cracks assumed to exist per 100 feet (or meters) of pipe.
+3. Experimental values of leak area expansion obtained for single cracks range widely depending on pipe material and diameter, and crack length and geometry (e.g. from 0 (sq mm)/m for small diameter steel and iron, to >100 (sq mm)/m for a 200 mm longitudinal slit in a 50 mm diameter class PN6 PVC pipe). Regardless of experimental values obtained for individual cracks, the value of the expansion parameter used here is also directly dependent on the expected density of leakage-generating cracks. For example, 10 identical cracks per 100 m pipe length, with a single crack expansion rate of 0.1 (sq mm)/m, would be modeled using an expansion parameter of 10 * 0.1 (sq mm)/m = 1 (sq mm)/m.
 */
 
 /**
