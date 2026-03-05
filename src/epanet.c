@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/17/2026
+ Last Updated: 03/05/2026
  ******************************************************************************
 */
 
@@ -2758,6 +2758,26 @@ int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double valu
     return 0;
 }
 
+int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values)
+/*----------------------------------------------------------------
+**  Input:   property = node property code (see EN_NodeProperty)
+**           values = array of node property values
+**  Output:  none
+**  Returns: error code
+**  Purpose: sets an array of node property values
+**----------------------------------------------------------------
+*/
+{
+    int errcode = 0, i = 0;
+
+    for (i = 1; i <= p->network.Nnodes; i++)
+    {
+        errcode = EN_setnodevalue(p, i, property, values[i - 1]);
+        if (errcode != 0) { return errcode; }
+    }
+    return 0;
+}
+
 int DLLEXPORT EN_setjuncdata(EN_Project p, int index, double elev,
                              double dmnd, const char *dmndpat)
 /*----------------------------------------------------------------
@@ -4300,6 +4320,26 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
 
     default:
         return 251;
+    }
+    return 0;
+}
+
+int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values)
+/*----------------------------------------------------------------
+**  Input:   property = link property code (see EN_LinkProperty)
+**           values = array of link property values
+**  Output:  none
+**  Returns: error code
+**  Purpose: sets property values for all links
+**----------------------------------------------------------------
+*/
+{
+    int errcode = 0, i = 0;
+
+    for (i = 1; i <= p->network.Nlinks; i++)
+    {
+        errcode = EN_setlinkvalue(p, i, property, values[i - 1]);
+        if (errcode != 0) { return errcode; }
     }
     return 0;
 }
