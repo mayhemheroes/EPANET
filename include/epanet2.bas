@@ -361,7 +361,7 @@ Public Const EN_TRUE = 1    ' boolean true
  Declare Function ENgetcoord Lib "epanet2.dll" (ByVal index As Long, x As Double, y As Double) As Long
  Declare Function ENsetcoord Lib "epanet2.dll" (ByVal index As Long, ByVal x As Double, ByVal y As Double) As Long
  Declare Function ENgetnodevalues Lib "epanet2.dll" (ByVal property as Long, values as Any) As Long
- Declare Function ENsetnodevalues Lib "epanet2.dll" (ByVal property As Long, values As Any) As Long
+ Declare Function ENsetnodevalues Lib "epanet2.dll" (ByVal property As Long, values As Any, badIndex As Long) As Long
  
 'Nodal Demand Functions
  Declare Function ENgetdemandmodel Lib "epanet2.dll" (type_ As Long, pmin As Single, preq As Single, pexp As Single) As Long
@@ -395,7 +395,7 @@ Public Const EN_TRUE = 1    ' boolean true
  Declare Function ENsetvertex Lib "epanet2.dll" (ByVal index As Long, ByVal vertex As Long, ByVal x As Double, ByVal y As Double) As Long
  Declare Function ENsetvertices Lib "epanet2.dll" (ByVal index As Long, xCoords As Any, yCoords As Any, ByVal count As Long) As Long
  Declare Function ENgetlinkvalues Lib "epanet2.dll" (ByVal property as Long, values as Any) As Long
- Declare Function ENsetlinkvalues Lib "epanet2.dll" (ByVal property As Long, values As Any) As Long
+ Declare Function ENsetlinkvalues Lib "epanet2.dll" (ByVal property As Long, values As Any, badIndex As Long) As Long
  
 'Pump Functions
  Declare Function ENgetheadcurveindex Lib "epanet2.dll" (ByVal linkIndex As Long, curveIndex As Long) As Long

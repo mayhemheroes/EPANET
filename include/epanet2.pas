@@ -381,7 +381,7 @@ const
  function  ENgetcoord(Index: Integer; var X: Double; var Y: Double): Integer; cdecl; external EpanetLib;
  function  ENsetcoord(Index: Integer; X: Double; Y: Double): Integer; cdecl; external EpanetLib;
  function  ENgetnodevalues(Code: Integer; var X: array of Single): Integer; cdecl; external EpanetLib;
- function ENsetnodevalues(Code: Integer; var X: array of Single): Integer; cdecl; external EpanetLib;
+ function  ENsetnodevalues(Code: Integer; var X: array of Double; var badIndex: Integer): Integer; cdecl; external EpanetLib;
 
 {Demand Functions}
  function  ENgetdemandmodel(var Model: Integer; var Pmin: Single; var Preq: Single; var Pexp: Single): Integer; cdecl; external EpanetLib;
@@ -411,7 +411,7 @@ const
  function  ENsetlinkvalue(Index: Integer; Code: Integer; Value: Single): Integer; cdecl; external EpanetLib;
  function  ENsetpipedata(Index: Integer; Length: Single; Diam: Single; Rough: Single; Mloss:Single): Integer; cdecl; external EpanetLib;
  function  ENgetlinkvalues(Code: Integer; var X: array of Single): Integer; cdecl; external EpanetLib;
- function ENsetlinkvalues(Code: Integer; var X: array of Single): Integer; cdecl; external EpanetLib;
+ function  ENsetlinkvalues(Code: Integer; var X: array of Double; var badIndex: Integer): Integer; cdecl; external EpanetLib;
 
  function  ENgetvertexcount(Index: Integer; var Count: Integer): Integer; cdecl; external EpanetLib;
  function  ENgetvertex(Index: Integer; Vertex: Integer; var X: Double; var Y: Double): Integer; cdecl; external EpanetLib;
