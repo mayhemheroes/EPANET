@@ -223,7 +223,7 @@ extern "C" {
 
    int DLLEXPORT ENsetnodevalue(int index, int property, EN_API_FLOAT_TYPE value);
 
-   int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values);
+   int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex);
 
    int DLLEXPORT ENsetjuncdata(int index, EN_API_FLOAT_TYPE elev,
                  EN_API_FLOAT_TYPE dmnd, const char *dmndpat);
@@ -304,7 +304,7 @@ extern "C" {
 
   int DLLEXPORT ENsetlinkvalue(int index, int property, EN_API_FLOAT_TYPE value);
 
-  int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values);
+  int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex);
 
   int DLLEXPORT ENsetpipedata(int index, EN_API_FLOAT_TYPE length,
                 EN_API_FLOAT_TYPE diam, EN_API_FLOAT_TYPE rough,

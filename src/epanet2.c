@@ -383,15 +383,43 @@ int DLLEXPORT ENsetnodevalue(int index, int property, EN_API_FLOAT_TYPE value)
     return EN_setnodevalue(_defaultProject, index, property, value);
 }
 
-int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values)
+int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex)
 {
-    int i, errcode = 0;
+    int i, j, errcode = 0;
+    int n = _defaultProject->network.Nnodes;
+    EN_API_FLOAT_TYPE *old = NULL;
 
-    for (i = 1; i <= _defaultProject->network.Nnodes; i++)
+    if (badIndex) *badIndex = 0;
+	
+    old = (EN_API_FLOAT_TYPE *)malloc(n * sizeof(EN_API_FLOAT_TYPE));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
     {
-        errcode = ENsetnodevalue(i, property, values[i-1]);
-        if (errcode != 0) return errcode;
+        errcode = ENgetnodevalue(i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+            free(old);
+            return errcode;
+        }
+
+        errcode = ENsetnodevalue(i, property, values[i - 1]);
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+
+            for (j = 1; j < i; j++)
+            {
+                (void)ENsetnodevalue(j, property, old[j - 1]);
+            }
+
+            free(old);
+            return errcode;
+        }
     }
+
+    free(old);
     return 0;
 }
 
@@ -577,15 +605,43 @@ int DLLEXPORT ENsetlinkvalue(int index, int property, EN_API_FLOAT_TYPE value)
     return EN_setlinkvalue(_defaultProject, index, property, value);
 }
 
-int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values)
+int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex)
 {
-    int i, errcode = 0;
+    int i, j, errcode = 0;
+    int n = _defaultProject->network.Nlinks;
+    EN_API_FLOAT_TYPE *old = NULL;
 
-    for (i = 1; i <= _defaultProject->network.Nlinks; i++)
+    if (badIndex) *badIndex = 0;
+
+    old = (EN_API_FLOAT_TYPE *)malloc(n * sizeof(EN_API_FLOAT_TYPE));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
     {
-        errcode = ENsetlinkvalue(i, property, values[i-1]);
-        if (errcode != 0) return errcode;
+        errcode = ENgetlinkvalue(i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+            free(old);
+            return errcode;
+        }
+
+        errcode = ENsetlinkvalue(i, property, values[i - 1]);
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+
+            for (j = 1; j < i; j++)
+            {
+                (void)ENsetlinkvalue(j, property, old[j - 1]);
+            }
+
+            free(old);
+            return errcode;
+        }
     }
+
+    free(old);
     return 0;
 }
 

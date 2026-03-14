@@ -2758,23 +2758,51 @@ int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double valu
     return 0;
 }
 
-int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values)
+int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *badIndex)
 /*----------------------------------------------------------------
 **  Input:   property = node property code (see EN_NodeProperty)
 **           values = array of node property values
-**  Output:  none
+**  Output:  badIndex = index of node whose assignment fails (0 if none)
 **  Returns: error code
 **  Purpose: sets an array of node property values
 **----------------------------------------------------------------
 */
 {
-    int errcode = 0, i = 0;
+    int i, j, errcode = 0;
+    int n = p->network.Nnodes;
+    double *old = NULL;
 
-    for (i = 1; i <= p->network.Nnodes; i++)
+    if (badIndex) *badIndex = 0;
+
+    old = (double *)malloc(n * sizeof(double));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
     {
+        errcode = EN_getnodevalue(p, i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+            free(old);
+            return errcode;
+        }
+
         errcode = EN_setnodevalue(p, i, property, values[i - 1]);
-        if (errcode != 0) { return errcode; }
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+
+            for (j = 1; j < i; j++)
+            {
+                (void)EN_setnodevalue(p, j, property, old[j - 1]);
+            }
+
+            free(old);
+            return errcode;
+        }
     }
+
+    free(old);
     return 0;
 }
 
@@ -4324,23 +4352,51 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
     return 0;
 }
 
-int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values)
+int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *badIndex)
 /*----------------------------------------------------------------
 **  Input:   property = link property code (see EN_LinkProperty)
 **           values = array of link property values
-**  Output:  none
+**  Output:  badIndex = index of link whose assignment fails (0 if none)
 **  Returns: error code
 **  Purpose: sets property values for all links
 **----------------------------------------------------------------
 */
 {
-    int errcode = 0, i = 0;
+    int i, j, errcode = 0;
+    int n = p->network.Nlinks;
+    double *old = NULL;
 
-    for (i = 1; i <= p->network.Nlinks; i++)
+    if (badIndex) *badIndex = 0;
+
+    old = (double *)malloc(n * sizeof(double));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
     {
+        errcode = EN_getlinkvalue(p, i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+            free(old);
+            return errcode;
+        }
+
         errcode = EN_setlinkvalue(p, i, property, values[i - 1]);
-        if (errcode != 0) { return errcode; }
+        if (errcode != 0)
+        {
+            if (badIndex) *badIndex = i;
+
+            for (j = 1; j < i; j++)
+            {
+                (void)EN_setlinkvalue(p, j, property, old[j - 1]);
+            }
+
+            free(old);
+            return errcode;
+        }
     }
+
+    free(old);
     return 0;
 }
 
