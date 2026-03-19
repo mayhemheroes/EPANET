@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/14/2025
+ Last Updated: 03/19/2026
  ******************************************************************************
 */
 
@@ -399,28 +399,29 @@ int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badI
         errcode = ENgetnodevalue(i, property, &old[i - 1]);
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-            free(old);
-            return errcode;
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for nodes 1 to i-1
         }
-
-        errcode = ENsetnodevalue(i, property, values[i - 1]);
+        else
+        {
+            errcode = ENsetnodevalue(i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for nodes 1 to i
+            }
+        }
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-
-            for (j = 1; j < i; j++)
+            for (int k = 1; k <= j; k++)
             {
-                (void)ENsetnodevalue(j, property, old[j - 1]);
+                ENsetnodevalue(k, property, old[k - 1]);
             }
-
-            free(old);
-            return errcode;
+            break;
         }
     }
-
     free(old);
-    return 0;
+    return errcode;
 }
 
 int DLLEXPORT ENsetjuncdata(int index, EN_API_FLOAT_TYPE elev, EN_API_FLOAT_TYPE dmnd,
@@ -621,28 +622,29 @@ int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badI
         errcode = ENgetlinkvalue(i, property, &old[i - 1]);
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-            free(old);
-            return errcode;
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for links 1 to i-1
         }
-
-        errcode = ENsetlinkvalue(i, property, values[i - 1]);
+        else
+        {
+            errcode = ENsetlinkvalue(i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for links 1 to i
+            }
+        }
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-
-            for (j = 1; j < i; j++)
+            for (int k = 1; k <= j; k++)
             {
-                (void)ENsetlinkvalue(j, property, old[j - 1]);
+                ENsetlinkvalue(k, property, old[k - 1]);
             }
-
-            free(old);
-            return errcode;
+            break;
         }
     }
-
     free(old);
-    return 0;
+    return errcode;
 }
 
 int DLLEXPORT ENsetpipedata(int index, EN_API_FLOAT_TYPE length,

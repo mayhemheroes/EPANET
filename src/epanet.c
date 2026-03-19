@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/05/2026
+ Last Updated: 03/19/2026
  ******************************************************************************
 */
 
@@ -2782,28 +2782,29 @@ int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *
         errcode = EN_getnodevalue(p, i, property, &old[i - 1]);
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-            free(old);
-            return errcode;
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for nodes 1 to i-1
         }
-
-        errcode = EN_setnodevalue(p, i, property, values[i - 1]);
+        else
+        {
+            errcode = EN_setnodevalue(p, i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for nodes 1 to i
+            }
+        }
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-
-            for (j = 1; j < i; j++)
+            for (int k = 1; k <= j; k++)
             {
-                (void)EN_setnodevalue(p, j, property, old[j - 1]);
+                EN_setnodevalue(p, k, property, old[k - 1]);
             }
-
-            free(old);
-            return errcode;
+            break;
         }
     }
-
     free(old);
-    return 0;
+    return errcode;
 }
 
 int DLLEXPORT EN_setjuncdata(EN_Project p, int index, double elev,
@@ -4376,28 +4377,29 @@ int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *
         errcode = EN_getlinkvalue(p, i, property, &old[i - 1]);
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-            free(old);
-            return errcode;
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for links 1 to i-1
         }
-
-        errcode = EN_setlinkvalue(p, i, property, values[i - 1]);
+        else
+        {
+            errcode = EN_setlinkvalue(p, i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for links 1 to i
+            }
+        }
         if (errcode != 0)
         {
-            if (badIndex) *badIndex = i;
-
-            for (j = 1; j < i; j++)
+            for (int k = 1; k <= j; k++)
             {
-                (void)EN_setlinkvalue(p, j, property, old[j - 1]);
+                EN_setlinkvalue(p, k, property, old[k - 1]);
             }
-
-            free(old);
-            return errcode;
+            break;
         }
     }
-
     free(old);
-    return 0;
+    return errcode;
 }
 
 int DLLEXPORT EN_setpipedata(EN_Project p, int index, double length,
