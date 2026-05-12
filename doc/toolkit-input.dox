@@ -18,7 +18,7 @@ The file is organized by sections where each section begins with a keyword enclo
     
 The order of sections is not important. However, whenever a node or link is referred to in a section it must have already been defined in the [JUNCTIONS], [RESERVOIRS], [TANKS], [PIPES], [PUMPS], or [VALVES] sections. Thus it is recommended that these sections be placed first.
 
-Each section can contain one or more lines of data. Blank lines can appear anywhere in the file and the semicolon (;) can be used to indicate that what follows on the line is a comment, not data. A maximum of 1024 characters can appear on a line.
+Each section can contain one or more lines of data. Blank lines can appear anywhere in the file and the semicolon (;) can be used to indicate that what follows on the line is a comment, not data. Numerical data must use a dot ('.') as the decimal point. A maximum of 1024 characters can appear on a line.
 
 The ID labels used to identify nodes, links, curves and patterns can be any combination of up to 31 characters and numbers.
 

@@ -149,4 +149,6 @@ This document describes the changes and updates that have been made in version 2
  - Fixes errors converting the units of the Leak Area and Leak Area Expansion parameters used in the FAVAD pipe leakage model.
  - To avoid reporting that full tanks are overflowing when they see negligible net inflows or outflows, those flows are now ignored when updating the tank's volume and head.
  #### 2.3.5:
- - Makes `EN_setflowunits` change flow units for all assigned data curves but no longer changes pressure units when the unit system changes since v2.3 supports mixed-unit conventions (e.g., using LPS for flow and PSI for pressure). 
+ - Makes `EN_setflowunits` change flow units for all assigned data curves but no longer changes pressure units when the unit system changes since v2.3 supports mixed-unit conventions (e.g., using LPS for flow and PSI for pressure).
+#### 2.3.6:
+- Insures that a dot decimal point is used when reading/writing EPANET files regardless of what the system locale uses.
