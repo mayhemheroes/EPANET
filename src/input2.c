@@ -18,6 +18,9 @@ Last Updated: 05/11/2026
 #include <string.h>
 #include <math.h>
 #include <locale.h>
+#ifdef __APPLE__
+  #include <xlocale.h>
+#endif
 
 #include "types.h"
 #include "funcs.h"
