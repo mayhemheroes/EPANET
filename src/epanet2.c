@@ -7,12 +7,13 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/19/2026
+ Last Updated: 05/11/2026
  ******************************************************************************
 */
 
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -32,6 +33,10 @@ void createtmpfiles()
     getTmpName(_defaultProject->TmpHydFname);
     getTmpName(_defaultProject->TmpOutFname);
     getTmpName(_defaultProject->TmpStatFname);
+    
+    // Use system's decimal point (will be changed locally to dot
+    // when reading/writing EPANET input files)
+    setlocale(LC_NUMERIC, "");
 }
 
 void removetmpfiles()

@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/19/2026
+ Last Updated: 05/11/2026
  ******************************************************************************
 */
 
@@ -16,6 +16,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <locale.h>
 
 #include "epanet2_2.h"
 #include "types.h"
@@ -48,6 +49,10 @@ int DLLEXPORT EN_createproject(EN_Project *p)
     getTmpName(project->TmpOutFname);
     getTmpName(project->TmpStatFname);
     *p = project;
+    
+    // Use system's decimal point (will be changed locally to dot
+    // when reading/writing EPANET input files)
+    setlocale(LC_NUMERIC, "");
     return 0;
 }
 
