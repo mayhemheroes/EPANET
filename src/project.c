@@ -877,6 +877,7 @@ int changevalvetype(Project *pr, int index, int type)
         case GPV:
             setting = 0.0;
             break;
+        default: break;
     }
     switch (type)
     {
@@ -1307,7 +1308,6 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
 */
 {
     Network *net = &p->network;
-    Parser *parser = &p->parser;
     
     long t = 0;
     double lvl = 0.0, s = MISSING;
@@ -1367,6 +1367,7 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
                 else return 202;
                 s = net->Link[linkIndex].Kc;
                 break;
+            default: break;
         }
     }
     
