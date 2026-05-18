@@ -2773,7 +2773,7 @@ int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *
 **----------------------------------------------------------------
 */
 {
-    int i, j, errcode = 0;
+    int i, j, k, errcode = 0;
     int n = p->network.Nnodes;
     double *old = NULL;
 
@@ -2801,7 +2801,7 @@ int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *
         }
         if (errcode != 0)
         {
-            for (int k = 1; k <= j; k++)
+            for (k = 1; k <= j; k++)
             {
                 EN_setnodevalue(p, k, property, old[k - 1]);
             }
@@ -4368,7 +4368,7 @@ int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *
 **----------------------------------------------------------------
 */
 {
-    int i, j, errcode = 0;
+    int i, j, k, errcode = 0;
     int n = p->network.Nlinks;
     double *old = NULL;
 
@@ -4396,7 +4396,7 @@ int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *
         }
         if (errcode != 0)
         {
-            for (int k = 1; k <= j; k++)
+            for (k = 1; k <= j; k++)
             {
                 EN_setlinkvalue(p, k, property, old[k - 1]);
             }
@@ -4637,7 +4637,6 @@ int DLLEXPORT EN_setheadcurveindex(EN_Project p, int linkIndex, int curveIndex)
     Network *net = &p->network;
 
     int pumpIndex;
-    int err = 0;
     Spump *pump;
 
     // Check for valid parameters

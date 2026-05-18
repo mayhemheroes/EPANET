@@ -257,7 +257,6 @@ double findlinkleakage(Project *pr, int i)
 {
     Network *net = &pr->network;
     Hydraul *hyd = &pr->hydraul;
-    Smatrix *sm = &hyd->smatrix;
     Slink *link = &net->Link[i];
     
     int    n1, n2;
