@@ -15,6 +15,8 @@
    Tests Pipe Leakage Feature
 */
 
+#include <cmath>
+
 #include <boost/test/unit_test.hpp>
 
 #include "test_toolkit.hpp"
