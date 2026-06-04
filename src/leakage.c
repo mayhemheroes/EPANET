@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 01/28/2026
+ Last Updated: 06/04/2026
  ******************************************************************************
 */
 /*
@@ -64,12 +64,17 @@ int openleakage(Project *pr)
 **-------------------------------------------------------------
 */
 {
+    Network *net = &pr->network;
     Hydraul *hyd = &pr->hydraul;
 
-    int err;
+    int i, err;
+    
+    // Reclaim any existing leakage memory
+    closeleakage(pr);
+    for (i = 1; i <= net->Nlinks; i++) hyd->LeakageFlow[i] = 0.0;
     
     // Check if project includes leakage
-    closeleakage(pr);
+    hyd->LeakageChanged = FALSE;
     hyd->HasLeakage = check_for_leakage(pr);
     if (!hyd->HasLeakage) return 0;
     
