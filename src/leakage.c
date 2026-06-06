@@ -32,6 +32,7 @@ SUM(x) is the summation of x over all pipes connected to the node.
 */
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "types.h"
 #include "funcs.h"
