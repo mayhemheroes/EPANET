@@ -1,0 +1,13 @@
+project: epanet
+target: runepanet
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/runepanet/testsuite
+
+cmds:
+  - cmd: /mayhem/runepanet @@ /tmp/report.rpt
+    filepath: /tmp/input.inp
+    # ASan-instrumented raw file CLI: mayhem-fuzz needs the compatibility runner (rc-254
+    # restart loop under the default snapshot runner with sanitizer shadow mappings).
+    env:
+      MFUZZ_COMPAT_LEVEL: "2"
