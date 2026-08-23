@@ -2878,7 +2878,7 @@ int DLLEXPORT EN_settankdata(EN_Project p, int index, double elev,
 
     int i, j, n, curveIndex = 0;
     double *Ucf = p->Ucf;
-    double area;
+    double area, minVolume;
     Stank *Tank = net->Tank;
     Scurve *curve;
 
@@ -2923,12 +2923,20 @@ int DLLEXPORT EN_settankdata(EN_Project p, int index, double elev,
     Tank[j].Vcurve = curveIndex;
     if (curveIndex == 0)
     {
-        if (minvol > 0.0) Tank[j].Vmin = minvol / Ucf[VOLUME];
-        else Tank[j].Vmin = Tank[j].A * (Tank[j].Hmin - elev / Ucf[ELEV]);
+        // Compute cylindrical volumes in user units before converting them
+        // to internal units, matching the input-file parsing path.
+        minVolume = area * minlvl;
+        if (minvol > 0.0) minVolume = minvol;
+        Tank[j].Vmin = minVolume / Ucf[VOLUME];
+        Tank[j].V0 = (minVolume + area * (initlvl - minlvl)) / Ucf[VOLUME];
+        Tank[j].Vmax = (minVolume + area * (maxlvl - minlvl)) / Ucf[VOLUME];
     }
-    else Tank[j].Vmin = tankvolume(p, j, Tank[j].Hmin);
-    Tank[j].V0 = tankvolume(p, j, Tank[j].H0);
-    Tank[j].Vmax = tankvolume(p, j, Tank[j].Hmax);
+    else
+    {
+        Tank[j].Vmin = tankvolume(p, j, Tank[j].Hmin);
+        Tank[j].V0 = tankvolume(p, j, Tank[j].H0);
+        Tank[j].Vmax = tankvolume(p, j, Tank[j].Hmax);
+    }
     return 0;
 }
 

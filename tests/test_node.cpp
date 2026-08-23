@@ -389,3 +389,51 @@ BOOST_AUTO_TEST_CASE(test_reopen_comment, * boost::unit_test::depends_on("node_c
 
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(tankdata_fidelity)
+
+BOOST_AUTO_TEST_CASE(test_settankdata_preserves_cylindrical_tank_volumes)
+{
+    int error = 0;
+    int index = 0;
+    double initialVolumeBefore = 0.0;
+    double minimumVolumeBefore = 0.0;
+    double maximumVolumeBefore = 0.0;
+    double initialVolumeAfter = 0.0;
+    double minimumVolumeAfter = 0.0;
+    double maximumVolumeAfter = 0.0;
+    EN_Project ph = NULL;
+
+    error = EN_createproject(&ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_open(ph, "./tank_metric.inp", DATA_PATH_RPT, "");
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodeindex(ph, (char *)"T1", &index);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_getnodevalue(ph, index, EN_INITVOLUME, &initialVolumeBefore);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, index, EN_MINVOLUME, &minimumVolumeBefore);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, index, EN_MAXVOLUME, &maximumVolumeBefore);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_settankdata(ph, index, 100.0, 5.0, 1.0, 10.0, 5.0, 0.0, "");
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_getnodevalue(ph, index, EN_INITVOLUME, &initialVolumeAfter);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, index, EN_MINVOLUME, &minimumVolumeAfter);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, index, EN_MAXVOLUME, &maximumVolumeAfter);
+    BOOST_REQUIRE(error == 0);
+
+    BOOST_CHECK_EQUAL(initialVolumeAfter, initialVolumeBefore);
+    BOOST_CHECK_EQUAL(minimumVolumeAfter, minimumVolumeBefore);
+    BOOST_CHECK_EQUAL(maximumVolumeAfter, maximumVolumeBefore);
+
+    EN_close(ph);
+    EN_deleteproject(ph);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
