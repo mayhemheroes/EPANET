@@ -1285,8 +1285,9 @@ int DLLEXPORT EN_setoption(EN_Project p, int option, double value)
         return 0;
     }
 
-    // All other option values must be non-negative
-    if (value < 0.0) return 213;
+    // Bulk and tank reaction orders can be negative to select
+    // Michaelis-Menten kinetics. All other option values must be non-negative.
+    if (value < 0.0 && option != EN_BULKORDER && option != EN_TANKORDER) return 213;
 
     // Process the specified option
     switch (option)

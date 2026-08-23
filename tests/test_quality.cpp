@@ -97,4 +97,32 @@ BOOST_FIXTURE_TEST_CASE(test_progressive_step, FixtureOpenClose)
 
 }
 
+BOOST_FIXTURE_TEST_CASE(test_michaelis_menten_reaction_orders, FixtureOpenClose)
+{
+    double value = 0.0;
+
+    error = EN_setoption(ph, EN_BULKORDER, -1.0);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getoption(ph, EN_BULKORDER, &value);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(value == -1.0);
+
+    error = EN_setoption(ph, EN_TANKORDER, -1.0);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getoption(ph, EN_TANKORDER, &value);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(value == -1.0);
+
+    // Wall reaction order remains restricted to zero or one.
+    error = EN_setoption(ph, EN_WALLORDER, -1.0);
+    BOOST_CHECK(error == 213);
+
+    error = EN_setoption(ph, EN_CONCENLIMIT, 1.0);
+    BOOST_REQUIRE(error == 0);
+    error = EN_solveH(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_solveQ(ph);
+    BOOST_REQUIRE(error == 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
