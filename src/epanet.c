@@ -1477,7 +1477,7 @@ int DLLEXPORT EN_setflowunits(EN_Project p, int units)
 
     int i, j;
     double qfactor, vfactor, hfactor, efactor, pfactor, dfactor, xfactor, yfactor;
-    double dcf, pcf, hcf, qcf;
+    double dcf, pcf, hcf, qcf, kwallfactor;
     double *Ucf = p->Ucf;
 
     if (!p->Openflag) return 102;
@@ -1506,6 +1506,22 @@ int DLLEXPORT EN_setflowunits(EN_Project p, int units)
         break;
     }
     initunits(p);
+
+    // Preserve the physical meaning of wall reaction coefficients when the
+    // unit system changes. First-order wall coefficients use length/time
+    // units while zero-order coefficients use mass/area/time units.
+    if (p->quality.WallOrder == 0.0)
+        kwallfactor = SQR(efactor / Ucf[ELEV]);
+    else
+        kwallfactor = Ucf[ELEV] / efactor;
+
+    p->quality.Kwall *= kwallfactor;
+    if (p->quality.Rfactor != MISSING) p->quality.Rfactor *= kwallfactor;
+    for (i = 1; i <= net->Nlinks; i++)
+    {
+        if (net->Link[i].Type <= PIPE && net->Link[i].Kw != MISSING)
+            net->Link[i].Kw *= kwallfactor;
+    }
 
     // Update units in rules
     dcf =  Ucf[DEMAND] / dfactor;

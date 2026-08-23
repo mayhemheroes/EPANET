@@ -356,4 +356,96 @@ BOOST_FIXTURE_TEST_CASE(test_decoupled_pressure_units, FixtureInitClose)
 }
 
 
+
+BOOST_FIXTURE_TEST_CASE(test_wall_reaction_unit_change_first_order, FixtureOpenClose)
+{
+    int linkIndex, nodeIndex;
+    double wallOrder, kwallUs, kwallSi, qualityUs, qualitySi;
+
+    error = EN_getoption(ph, EN_WALLORDER, &wallOrder);
+    BOOST_REQUIRE(error == 0);
+    BOOST_REQUIRE(wallOrder == 1.0);
+
+    error = EN_getlinkindex(ph, (char *)"10", &linkIndex);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodeindex(ph, (char *)"21", &nodeIndex);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_getlinkvalue(ph, linkIndex, EN_KWALL, &kwallUs);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK_CLOSE(kwallUs, -1.0, 1.e-10);
+
+    error = EN_solveH(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_solveQ(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, nodeIndex, EN_QUALITY, &qualityUs);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_setflowunits(ph, EN_LPS);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getlinkvalue(ph, linkIndex, EN_KWALL, &kwallSi);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK_CLOSE(kwallSi, kwallUs * MperFT, 1.e-10);
+
+    error = EN_solveH(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_solveQ(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, nodeIndex, EN_QUALITY, &qualitySi);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(abs(qualitySi - qualityUs) < 1.e-8);
+
+    error = EN_setflowunits(ph, EN_GPM);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getlinkvalue(ph, linkIndex, EN_KWALL, &kwallUs);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK_CLOSE(kwallUs, -1.0, 1.e-10);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_wall_reaction_unit_change_zero_order, FixtureOpenClose)
+{
+    int linkIndex, nodeIndex;
+    double kwallUs, kwallSi, qualityUs, qualitySi;
+
+    error = EN_setoption(ph, EN_WALLORDER, 0.0);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_getlinkindex(ph, (char *)"10", &linkIndex);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodeindex(ph, (char *)"21", &nodeIndex);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_getlinkvalue(ph, linkIndex, EN_KWALL, &kwallUs);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK_CLOSE(kwallUs, -1.0, 1.e-10);
+
+    error = EN_solveH(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_solveQ(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, nodeIndex, EN_QUALITY, &qualityUs);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_setflowunits(ph, EN_LPS);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getlinkvalue(ph, linkIndex, EN_KWALL, &kwallSi);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK_CLOSE(kwallSi, kwallUs / (MperFT * MperFT), 1.e-10);
+
+    error = EN_solveH(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_solveQ(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getnodevalue(ph, nodeIndex, EN_QUALITY, &qualitySi);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(abs(qualitySi - qualityUs) < 1.e-8);
+
+    error = EN_setflowunits(ph, EN_GPM);
+    BOOST_REQUIRE(error == 0);
+    error = EN_getlinkvalue(ph, linkIndex, EN_KWALL, &kwallUs);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK_CLOSE(kwallUs, -1.0, 1.e-10);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
